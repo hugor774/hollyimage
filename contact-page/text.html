@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('back1.jpeg');
+            background-size: cover;
+            background-position: cover;
+        }
+
+        .container {
+            width: 400px;
+            max-width: 100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f2f2f2;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-log {
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+
+        .message {
+            margin-bottom: 10px;
+        }
+
+        .message .profile-icon {
+            width: 25px;
+            height: 30px;
+            background-color: #ccc;
+            border-radius: 50%;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .message.user-message {
+            text-align: right;
+        }
+
+        .message.user-message .profile-icon {
+            float: right;
+            background-image: url('5.jpg'); /* Replace with your user icon image URL */
+            /* Additional styling for the user icon */
+            /* width: ...; */
+            /* height: ...; */
+            /* background-size: ...; */
+            /* background-position: ...; */
+        }
+
+        .message.bot-message {
+            text-align: left;
+        }
+
+        .message.bot-message .profile-icon {
+            float: left;
+        }
+
+        .input-container {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+        }
+
+        .input-container input[type="text"] {
+            flex-grow: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            outline: none;
+        }
+
+        .input-container .send-button {
+            margin-left: 10px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .chatbot-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .chatbot-button .profile-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #fff;
+            border-radius: 50%;
+            margin: 10px;
+            background-image: url('5.jpeg'); /* Replace with your profile image URL */
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="chat-container">
+        <div class="chat-log" id="chat-log"></div>
+        <div class="input-container">
+            <input type="text" id="user-input">
+            <button class="send-button" id="send-button">Send</button>
+        </div>
+    </div>
+    <div class="chatbot-button" onclick="toggleChatbot()">
+        <div class="profile-icon"></div>
+    </div>
+
+    <script defer>
+        // Chatbot elements
+        const chatLog = document.getElementById('chat-log');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const chatContainer = document.getElementById('chat-container');
+
+        // Send user message
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (message !== '') {
+                displayMessage('You', message, 'user-message');
+                userInput.value = '';
+                simulateChatbotResponse(message);
+            }
+        }
+
+        // Toggle chatbot container visibility
+        function toggleChatbot() {
+            chatContainer.style.display = chatContainer.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Generate chatbot response
+        function generateBotResponse(userInput) {
+            const lowercaseInput = userInput.toLowerCase();
+            let response;
+
+            if (
+                lowercaseInput.includes('hi') ||
+                lowercaseInput.includes('hello') ||
+                lowercaseInput.includes('yola') ||
+                lowercaseInput.includes('hy')
+            ) {
+                response = 'Hello! How can I assist you today?';
+            } else if (
+                lowercaseInput.includes('product') ||
+                lowercaseInput.includes('information') ||
+                lowercaseInput.includes('cv')
+            ) {
+                response =
+                    'Hello! Absolutely, I\'d be happy to tell you about my photography services. I specialize in event photography, capturing special moments and creating lasting memories. Whether it\'s a wedding, corporate event, or family gathering, I aim to provide high-quality photographs that tell a story.';
+            } else if (
+                lowercaseInput.includes('equipment') ||
+                lowercaseInput.includes('cameras') ||
+                lowercaseInput.includes('materials')
+            ) {
+                response =
+                    'I use professional-grade camera equipment and lenses to ensure excellent image quality. I also bring along additional lighting equipment to create the perfect atmosphere and ensure well-lit photos, even in challenging lighting conditions.';
+            } else if (
+                lowercaseInput.includes('style') ||
+                lowercaseInput.includes('ways') ||
+                lowercaseInput.includes('strategies')
+            ) {
+                response =
+                    'My photography style is a blend of photojournalistic and artistic approaches. I strive to capture candid moments and genuine emotions while also incorporating creative and artistic compositions. I aim to create a balance between capturing authentic moments and delivering visually striking images.';
+            } else if (
+                lowercaseInput.includes('video') ||
+                lowercaseInput.includes('previous')
+            ) {
+                response = 'Yes, we do everything related to media.';
+            } else if (
+                lowercaseInput.includes('work')
+            ) {
+                response = 'Absolutely! You can visit my gallery to see my latest work.';
+            } else if (
+                lowercaseInput.includes('post-processing') ||
+                lowercaseInput.includes('image editing')
+            ) {
+                response =
+                    'After the event, I carefully select and curate the best images to ensure the highest quality representation of your event. I then perform post-processing techniques, including color correction, exposure adjustment, and minor retouching, to enhance the images while maintaining their natural look. The final edited photos will be delivered to you in a digital format.';
+            } else if (
+                lowercaseInput.includes('price') ||
+                lowercaseInput.includes('cost') ||
+                lowercaseInput.includes('much')
+            ) {
+                response =
+                    'My pricing and packages are tailored to the specific needs of each event. It depends on factors such as the duration of the event, location, and any additional services you may require. I would be happy to provide you with a customized quote based on your event details. Could you please provide me with more information about your event so that I can give you an accurate estimate?';
+            } else if (
+                lowercaseInput.includes('list') ||
+                lowercaseInput.includes('menu') ||
+                lowercaseInput.includes('ibiciro')
+            ) {
+                response =
+                    'Our prices are negotiable based on your specific requirements. Please call us at +250787452065 to discuss your needs.';
+            } else if (lowercaseInput.includes('video')) {
+                response = 'Sure! What kind of video are you looking for?';
+            } else if (lowercaseInput.includes('photo')) {
+                response = 'Sure! What kind of photo are you looking for?';
+            } else if (
+                lowercaseInput.includes('home') ||
+                lowercaseInput.includes('sector') ||
+                lowercaseInput.includes('restaurant') ||
+                lowercaseInput.includes('church')
+            ) {
+                response = 'Sure! Can you provide a location where we can reach you?';
+            } else if (lowercaseInput.includes('studio') || lowercaseInput.includes('photo')) {
+                response = 'Sure! We can make it!';
+            } else if (lowercaseInput.includes('contact')) {
+                response =
+                    'Sure! You can reach us at mugishahugor250@gmail.com or call us at +250787452065. We look forward to hearing from you!';
+            } else if (
+                lowercaseInput.includes('thx') ||
+                lowercaseInput.includes('thanks') ||
+                lowercaseInput.includes('murakoze')
+            ) {
+                response = "You're welcome! If you have any more questions, feel free to ask.";
+            } else {
+                // Redirect to WhatsApp number
+                response =
+                    "Sorry, I couldn't understand your request. Please contact us directly on WhatsApp at +250787452065.";
+                redirectToWhatsApp();
+            }
+
+            return {
+                response: response,
+                displayProfile: true, // Add a flag to indicate if the profile should be displayed
+            };
+        }
+
+        // Redirect to WhatsApp
+        function redirectToWhatsApp() {
+            window.location.href = 'https://wa.me/250787452065?text=Hello'; // Replace with your WhatsApp number and message
+        }
+
+        // Simulate chatbot response
+        function simulateChatbotResponse(userMessage) {
+            setTimeout(function () {
+                const response = generateBotResponse(userMessage);
+                displayMessage('Chatbot', response.response, 'bot-message'); // Access 'response' property
+            }, 3000);
+        }
+
+        // Display message in the chat log
+        function displayMessage(sender, message, messageType) {
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('message', messageType);
+
+            const profileContainer = document.createElement('div');
+            profileContainer.classList.add('profile-icon');
+
+            const textContainer = document.createElement('div');
+            textContainer.innerText = message;
+
+            messageContainer.appendChild(profileContainer);
+            messageContainer.appendChild(textContainer);
+
+            if (messageType === 'bot-message') {
+                const botProfileIcon = document.createElement('div');
+                botProfileIcon.classList.add(
+                    'profile-icon',
+                    'bot-profile-icon',
+                    'animate__animated',
+                    'animate__bounce'
+                );
+                botProfileIcon.style.backgroundImage = 'url(\'5.jpeg\')'; // Replace with your bot profile image URL
+                messageContainer.insertBefore(botProfileIcon, messageContainer.firstChild);
+            }
+
+            chatLog.appendChild(messageContainer);
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+
+        // Send message on button click
+        sendButton.addEventListener('click', sendMessage);
+
+        // Send message on pressing Enter key
+        userInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
